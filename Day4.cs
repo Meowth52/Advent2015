@@ -29,20 +29,20 @@ namespace Advent2015
             {
                 Sum++;
                 TestString = OhSantaIsGonnaGetHigh.GetHash(_input + Sum.ToString());
-                //if (Sum % 1000 == 0)
-                //mainView._OutText = Sum.ToString() + ", " + TestString;
+                if (Sum % 10000 == 0)
+                    mainView.OutText = Sum.ToString() + ", " + TestString;
             }
             Sum2 = Sum;
             while (TestString.Substring(0, 6) != "000000")
             {
                 Sum2++;
                 TestString = OhSantaIsGonnaGetHigh.GetHash(_input + Sum2.ToString());
-                if (Sum2 % 1000 == 0)
-                    GC.Collect();
-                //mainView._OutText = Sum.ToString() + ", " + TestString;
+                if (Sum2 % 10000 == 0)
+                    mainView.OutText = Sum2.ToString() + ", " + TestString;
             }
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
+            mainView.OutText = "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
             return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
         }
     }

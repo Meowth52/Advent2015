@@ -23,7 +23,10 @@ namespace Advent2015
             {
                 sBuilder.Append(byteData[i].ToString("x2"));
             }
-            return sBuilder.ToString();
+            string ReturnString = sBuilder.ToString();
+            sBuilder.Clear();
+            hashis.Clear();
+            return ReturnString;
         }
     }
 }

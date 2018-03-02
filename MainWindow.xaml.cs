@@ -20,7 +20,7 @@ namespace Advent2015
     /// </summary>
     public partial class MainWindow : Window
     {
-        int LastDay = 4;
+        int LastDay = 7;
         public int Day;
         private readonly MainView _mainView;
         public MainWindow()
@@ -52,7 +52,10 @@ namespace Advent2015
                         break;
                     case 4:
                         Day4 day4 = new Day4(InputBox.Text, _mainView);
-                        OutputBox.Text = day4.Result();
+                        Task.Run(() =>
+                        {
+                           day4.Result();
+                        });
                         break;
                     case 5:
                         Day5 day5 = new Day5(InputBox.Text);
