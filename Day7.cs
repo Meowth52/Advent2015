@@ -37,21 +37,37 @@ namespace Advent2015
             {
                 Wires.Add(Instruction.Last(), 0);
             }
-            string RemoveIndex = "";
+           int RemoveIndex;
             Regex MatchRegister = new Regex(@"[a-z]+");
             List<string> RegisterMatch = new List<string>();
             Regex MatchInstruction = new Regex(@"[A-Z]+");
             while (Instructions.Count > 0)
             {
+                RemoveIndex = -1;
                 foreach(string[] Instruction in Instructions)
                 {
                     RegisterMatch.Clear();
+                    bool Doable = true;
                     foreach (string s in Instruction)
-                        if (Instruction.Last() != s && Wires.ContainsKey(s) && Wires[s] != 0)
+                    {
+                        if (Instruction.Last() != s && Wires.ContainsKey(s))
                         {
-                            //markera för att det går att genomföra operationen, genomför den, breaka och ta bort den.
-                        }                            
+                            if (Wires[s] == 0)
+                            {
+                                Doable = false;
+                                //markera för att det går att genomföra operationen, genomför den, breaka och ta bort den.
+                            }
+                        }
+                    }
+                    if (Doable)
+                    {
+                        RemoveIndex = Instructions.IndexOf(Instruction);
+                        switch
+                        break;
+                    }
+
                 }
+                Instructions.RemoveAt(RemoveIndex);
             }
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
