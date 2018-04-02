@@ -38,6 +38,7 @@ namespace Advent2015
                 if (!Wires.ContainsKey(Instruction.Last()))
                     Wires.Add(Instruction.Last(), new Schmenum());
             }
+            Wires["b"].Assign(3176); //part 2 stuff
             int RemoveIndex;
             Regex MatchRegister = new Regex(@"[a-z]+");
             List<string> RegisterMatch = new List<string>();
@@ -73,6 +74,7 @@ namespace Advent2015
                         ushort Value2;
                         
                         string Target = Instruction.Last();
+                        if (Target != "b")//part 2 stuff
                         switch (Keyword)
                         {
                             case 'A': // And
@@ -100,6 +102,8 @@ namespace Advent2015
                                 Wires[Target].Assign((ushort)(~Value2));
                                 break;
                             default:
+                                Value2 = GetNumber(Instruction[0], ref Wires);
+                                Wires[Target].Assign((ushort)(Value2));
                                 break;
                         }
                     break;
