@@ -20,22 +20,64 @@ namespace Advent2015
         }
         public string Result()
         {
-            int Sum = 0;
+            int Sum = 1000000;
             int Sum2 = 0;
-            List<string> Locations = new List<string>();
-            List<string> NextLocations;
+            Dictionary<int, string> Locations = new Dictionary<int,string>();
+            String CharLocations = "";
+            List<string> PossibleRoutes;
+            int Distance = 0;
+            Dictionary<string, int> Distances = new Dictionary<string, int>();
+            StringPermutator MUTATE = new StringPermutator();
+            int IntInter = 0;
             foreach (string s in Instructions)
             {
-                string[] SplitString = s.Split(' ');
+                string[] SplitString = s.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ss in SplitString)
                 {
-                    if (ss.Length > 3 &! Locations.Contains(ss))
-                        Locations.Add(ss);
+                    if (Char.IsDigit(ss[0]))
+                    {
+                        Int32.TryParse(ss, out Distance);
+                        Distances.Add(s, Distance);
+                    }
+                    else
+                        if (ss.Length > 3 & !Locations.ContainsValue(ss))
+                    {
+                        Locations.Add(IntInter,ss);
+                        CharLocations += IntInter.ToString();
+                        IntInter++;
+                    }
                 }
             }
-            while(Locations.Count > 0)
+            PossibleRoutes = MUTATE.GetStrings(CharLocations);
+            foreach(string s in PossibleRoutes)
             {
-                fore
+                int TestSum = 0;
+                int TestTester = 0;
+                List<string> LocationPermutation = new List<string>();
+                //foreach (char c in s)
+                //    foreach (KeyValuePair<int,string> ss in Locations)
+                //        if (ss.Value == Locations)
+                //            LocationPermutation.Add(ss.Value);
+                for (int i = 0; i < IntInter-1; i++)
+                {
+                    foreach (KeyValuePair<string, int> d in Distances)
+                    {
+                        if (d.Key.Contains(Locations[i]) && d.Key.Contains(Locations[i+1]))
+                        {
+                            TestSum += d.Value;
+                            TestTester++;
+                        }
+                    }
+                }
+                if (TestTester == IntInter-1)
+                {
+                    if (TestSum < Sum)
+                        Sum = TestSum;
+                }
+                else
+                {
+                    ;//uh oh
+                }
             }
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
