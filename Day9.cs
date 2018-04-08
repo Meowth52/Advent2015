@@ -54,15 +54,11 @@ namespace Advent2015
                 int TestSum = 0;
                 int TestTester = 0;
                 List<string> LocationPermutation = new List<string>();
-                //foreach (char c in s)
-                //    foreach (KeyValuePair<int,string> ss in Locations)
-                //        if (ss.Value == Locations)
-                //            LocationPermutation.Add(ss.Value);
                 for (int i = 0; i < IntInter-1; i++)
                 {
                     foreach (KeyValuePair<string, int> d in Distances)
                     {
-                        if (d.Key.Contains(Locations[i]) && d.Key.Contains(Locations[i+1]))
+                        if (d.Key.Contains(Locations[(int)Char.GetNumericValue(s[i])]) && d.Key.Contains(Locations[(int)Char.GetNumericValue(s[i+1])]))
                         {
                             TestSum += d.Value;
                             TestTester++;
@@ -73,6 +69,8 @@ namespace Advent2015
                 {
                     if (TestSum < Sum)
                         Sum = TestSum;
+                    if (TestSum > Sum2)
+                        Sum2 = TestSum;
                 }
                 else
                 {
