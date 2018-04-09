@@ -23,7 +23,7 @@ namespace Advent2015
             StringBuilder NewString = new StringBuilder();
             char LastChar;
             int HowManyOf;
-            for (int i = 0;i <50;i++)
+            for (int i = 1;i <= 50;i++)
             {
                 NewString.Clear();
                 LastChar = ' ';
@@ -46,8 +46,10 @@ namespace Advent2015
                     LastChar = c;
                 }
                 Input = NewString.ToString();
+                if (i == 40)
+                    Sum = Input.Length;
             }
-            Sum = Input.Length;
+            Sum2 = Input.Length;
            stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
