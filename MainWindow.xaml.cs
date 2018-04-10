@@ -20,7 +20,7 @@ namespace Advent2015
     /// </summary>
     public partial class MainWindow : Window
     {
-        int LastDay = 10;
+        int LastDay = 11;
         public int Day;
         private readonly MainView _mainView;
         public MainWindow()
