@@ -30,30 +30,45 @@ namespace Advent2015
                 Sum += TryParseInt;
             }
             dynamic InputObject = JsonConvert.DeserializeObject(Input);
+            int ExtraInt;
             foreach (Newtonsoft.Json.Linq.JProperty o in InputObject)
             {
-                Sum2 += getObjects(o);
+                ExtraInt = getObjects(o);
+                if (ExtraInt == -1000000)
+                {
+                    ;
+                }
+                else
+                    Sum2 += ExtraInt;
             }
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
-            return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms" + "_" +":\"red";
+            return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
         }
         public int getObjects(Newtonsoft.Json.Linq.JToken p)
         {
             bool Redrum = false;
             int Counter = 0;
+            int ExtraInt = 0;
             Match IntergerMatch;
             int TryParseInt = 0;
             foreach (Newtonsoft.Json.Linq.JToken o in p)
             {
                 if (o.HasValues)
                 {
-                    Counter += getObjects(o);
+                    ExtraInt = getObjects(o);
+                    if (ExtraInt == -1000000)
+                    {
+                        Counter = 0;
+                        break;
+                    }
+                    else
+                        Counter += ExtraInt;
                 }
                 else
                 {
                     string wtf = o.ToString();
-                    if (o.ToString().Contains("red"))
+                    if (p.Type != Newtonsoft.Json.Linq.JTokenType.Array && o.ToString().Contains("red"))
                     {
                         Redrum = true;
                         break;
@@ -67,7 +82,7 @@ namespace Advent2015
                 }
             }
             if (Redrum)
-                Counter = 0;
+                Counter = -1000000;
             return Counter;
         }
     }
