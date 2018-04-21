@@ -36,8 +36,7 @@ namespace Advent2015
                 string s = "";
                 foreach (char c in CharArray)
                     s += c;
-                ResultList.Add(s);
-                Console.Write(CharArray);
+                ResultList.Add(s);                
             }
             else
                 for (int i = RecursionDepth; i <= MaxDepth; i++)
