@@ -23,32 +23,49 @@ namespace Advent2015
             int Sum = 0;
             int Sum2 = 0;
             int Time = 2503;
-            List<Raindeer> Raindeers = new List<Raindeer>();
+            List<Reindeer> Reindeers = new List<Reindeer>();
             foreach (string s in Instructions)
-                Raindeers.Add(new Raindeer(s));
-            foreach (Raindeer r in Raindeers)
+                Reindeers.Add(new Reindeer(s));
+            foreach (Reindeer r in Reindeers)
                 if (r.getDistance(Time) > Sum)
                     Sum = r.getDistance(Time);
             //Part 2
-            Dictionary<string, Raindeer> RainDic = new Dictionary<string, Raindeer>();
-            foreach (Raindeer r in Raindeers)
-                RainDic.Add(r.WhosAGoodBoy(), r);
+            Dictionary<string, Reindeer> ReinDic = new Dictionary<string, Reindeer>();
+            foreach (Reindeer r in Reindeers)
+                ReinDic.Add(r.WhosAGoodBoy(), r);
             for (int i = 1;i <= Time; i++)
             {
                 int CompareInt = 0;
-                string BestRaindeer = "";
-                foreach(Raindeer r in Raindeers)
+                foreach(KeyValuePair<string, Reindeer> r in ReinDic)
                 {
-                    if (r.tick > CompareInt)
+                    int Tick = r.Value.tick(i);
+                    if (Tick > CompareInt)
+                    {
+                        CompareInt = Tick;
+                    }
+                }
+                foreach (KeyValuePair<string, Reindeer> r in ReinDic)
+                {
+                    if (r.Value.getAccumelatedDistance() == CompareInt)
+                        r.Value.heresACandy();
                 }
             }
-            stopWatch.Stop();
+            int HowGoodCanABoyBe = 0;
+            foreach (KeyValuePair<string, Reindeer> r in ReinDic)
+            {
+                if (r.Value.HowGoodBoy()>HowGoodCanABoyBe)
+                {
+                    HowGoodCanABoyBe = r.Value.HowGoodBoy();
+                    Sum2 = r.Value.HowGoodBoy();
+                }
+            }
+                stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
         }
     }
 
-    internal class Raindeer
+    internal class Reindeer
     {
         String Name; //Because its cute
         int Speed = 0;
@@ -56,7 +73,7 @@ namespace Advent2015
         int RestTime = 0;
         int AccumulatedDistance = 0;
         int SantaPoint = 0;
-        public Raindeer(string input)
+        public Reindeer(string input)
         {
             string[] Words = input.Split(' ');
             Name = Words[0];
@@ -76,11 +93,25 @@ namespace Advent2015
         {
             if (Time % (Constitution + RestTime) < Constitution)
                 AccumulatedDistance += Speed;
+            else
+                ;
             return AccumulatedDistance;
         }
         public string WhosAGoodBoy()
         {
             return Name;
+        }
+        public int HowGoodBoy()
+        {
+            return SantaPoint;
+        }
+        public void heresACandy()
+        {
+            SantaPoint++;
+        }
+        public int getAccumelatedDistance()
+        {
+            return AccumulatedDistance;
         }
     }
 }
