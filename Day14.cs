@@ -33,7 +33,7 @@ namespace Advent2015
             Dictionary<string, Reindeer> ReinDic = new Dictionary<string, Reindeer>();
             foreach (Reindeer r in Reindeers)
                 ReinDic.Add(r.WhosAGoodBoy(), r);
-            for (int i = 1;i <= Time; i++)
+            for (int i = 0;i <= Time; i++)
             {
                 int CompareInt = 0;
                 foreach(KeyValuePair<string, Reindeer> r in ReinDic)
