@@ -27,6 +27,7 @@ namespace Advent2015
             List<Combination> Combinations = new List<Combination>();
             Combinations.Add(new Combination( Instructions));
             List<Combination> NextCombinations = new List<Combination>();
+            List<Combination> LegitCombinations = new List<Combination>();
 
             while (Combinations.Count > 0)
             {
@@ -35,8 +36,9 @@ namespace Advent2015
                     if (C.hasSumReached(MagicNumber))
                     {
                         Sum++;
+                        LegitCombinations.Add(C);
                     }
-                    else if (!C.isEmpty())
+                    else if (!C.isEmpty() && C.getSumSoFar() < MagicNumber)
                     {
                         NextCombinations.Add(new Combination(C.getNextSkipCombination()));
                         NextCombinations.Add(new Combination( C.getNextCombination()));
@@ -45,6 +47,18 @@ namespace Advent2015
                 Combinations = new List<Combination>(NextCombinations);
                 NextCombinations.Clear();
             }
+            int LeastNumberOfContainers = 1000000;
+            foreach(Combination C in LegitCombinations)
+            {
+                if (C.getNumberOfContainers() < LeastNumberOfContainers)
+                    LeastNumberOfContainers = C.getNumberOfContainers();
+            }
+            foreach (Combination C in LegitCombinations)
+            {
+                if (C.getNumberOfContainers() == LeastNumberOfContainers)
+                    Sum2++;
+            }
+
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
@@ -54,6 +68,7 @@ namespace Advent2015
     {
         List<int> Containers;
         int SumSoFar = 0;
+        List<int> UsedContainers;
         int ValueRemoved = 0;
         public Combination(string[] Input)
         {
@@ -65,12 +80,14 @@ namespace Advent2015
                 Int32.TryParse(s, out TryParseInt);
                 if (TryParseInt != 0)
                     Containers.Add(TryParseInt);
+                UsedContainers = new List<int>();
             }
         }
         public Combination(Combination OldCombination)
         {
             Containers = new List<int>(OldCombination.getList());
             SumSoFar = OldCombination.getSumSoFar();
+            UsedContainers = new List<int>(OldCombination.UsedContainers);
         }
         public bool hasSumReached(int i)
         {
@@ -92,9 +109,14 @@ namespace Advent2015
         {
             return SumSoFar;
         }
+        public int getNumberOfContainers()
+        {
+            return UsedContainers.Count;
+        }
         public Combination getNextCombination()
         {
             SumSoFar += ValueRemoved;
+            UsedContainers.Add(ValueRemoved);
             return this;
         }
         public Combination getNextSkipCombination()
