@@ -5,13 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Advent2015"
         mc:Ignorable="d"
-        Title="MainWindow" Height="422.485" Width="625.444">
+        Title="MainWindow" Height="933.742" Width="1361.671">
     <Window.DataContext>
         <local:MainView/>
     </Window.DataContext>
     <Grid>
-        <TextBox x:Name="InputBox" HorizontalAlignment="Left" Height="113" Margin="119,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="476" AcceptsReturn="True" KeyUp="InputBoxKeyUp"/>
-        <TextBox x:Name="OutputBox" HorizontalAlignment="Left" Height="197" Margin="119,181,-78,-59" TextWrapping="Wrap" VerticalAlignment="Top" Width="476" Text="{Binding OutText}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="86*"/>
+            <ColumnDefinition Width="531*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="InputBox" HorizontalAlignment="Left" Height="113" Margin="32.553,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="476" AcceptsReturn="True" KeyUp="InputBoxKeyUp" Grid.Column="1"/>
+        <TextBox x:Name="OutputBox" HorizontalAlignment="Left" Height="686" Margin="33,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="1074" Text="{Binding OutText}" FontFamily="Global Monospace" Grid.Column="1"/>
         <TextBox x:Name="DayBox" HorizontalAlignment="Left" Height="30" Margin="10,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="74" AcceptsReturn="True" KeyUp="DayBoxKeyUp"/>
 
     </Grid>
