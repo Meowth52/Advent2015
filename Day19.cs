@@ -23,11 +23,9 @@ namespace Advent2015
         {
             int Sum = 0;
             int Sum2 = 0;
-            int JustForcuriosity = 0;
             string Molecule = "";
-            List<string> DistinctMolecules = new List<string>();
             List<string[]> Replacments = new List<string[]>();
-            foreach(string s in Instructions)
+            foreach (string s in Instructions)
             {
                 string[] SplitString = s.Split(' ');
                 if (SplitString.Length == 1)
@@ -37,22 +35,75 @@ namespace Advent2015
                     Replacments.Add(new string[] { SplitString[0], SplitString[2] });
                 }
             }
+            Sum = getReplacements(Replacments, Molecule).Count;
+            //Part 2
+            // Reddit solution https://www.reddit.com/r/adventofcode/comments/3xflz8/day_19_solutions/cy4etju/
+            Molecule = Molecule.Replace("Rn", "");
+            Molecule = Molecule.Replace("Ar", "");
+            Sum2 = Regex.Matches(Molecule, @"[A-Z]").Count;
+            Sum2 -= Regex.Matches(Molecule, @"Y").Count * 2;
+            Sum2--;
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
+        }
+        public List<string> getReplacements(List<string[]> Replacments, string Molecule)
+        {
+            List<string> DistinctMolecules = new List<string>();
+            int JustForcuriosity = 0;
             foreach (string[] s in Replacments)
             {
-                string MutatableMolecule = Molecule.Replace(s[0], "_");
-                string[] Splitmolecule = MutatableMolecule.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
-                for(int i = 0;i < Splitmolecule.Length-1;i++)
+                Dictionary<int,int> NumberOfReplacments = new Dictionary<int, int>();
+                int CurrentIndex = 0;
+                //string MutatableMolecule = Molecule.Replace(s[0], "_");
+                for (int i = 0; i <= Molecule.Length - s[0].Length; i++)
+                    if (Molecule.Substring(i, s[0].Length) == s[0])
+                    {
+                        NumberOfReplacments.Add(CurrentIndex, i);
+                        CurrentIndex++;
+                    }
+                for (int i = 0; i < CurrentIndex; i++)
                 {
                     StringBuilder LetsTryThisOne = new StringBuilder();
-                    for (int ii = 0; ii < Splitmolecule.Length; ii++)
-                    {
-                        LetsTryThisOne.Append(Splitmolecule[ii]);
-                        if (ii == Splitmolecule.Length)
-                            break;
-                        if (i == ii)
+                        {
+                            if (NumberOfReplacments[i] > 0)
+                                LetsTryThisOne.Append(Molecule.Substring(0, NumberOfReplacments[i]));
                             LetsTryThisOne.Append(s[1]);
-                        else
-                            LetsTryThisOne.Append(s[0]);
+                            if (NumberOfReplacments[i] < Molecule.Length)
+                                LetsTryThisOne.Append(Molecule.Substring(NumberOfReplacments[i] + s[0].Length));
+                        }
+                    if (!DistinctMolecules.Contains(LetsTryThisOne.ToString()))
+                        DistinctMolecules.Add(LetsTryThisOne.ToString());
+                    else
+                        JustForcuriosity++;
+                }
+            }
+            return DistinctMolecules;
+        }
+        public List<string> getBackwardReplacements(List<string[]> Replacments, string Molecule)
+        {
+            List<string> DistinctMolecules = new List<string>();
+            int JustForcuriosity = 0;
+            foreach (string[] s in Replacments)
+            {
+                Dictionary<int, int> NumberOfReplacments = new Dictionary<int, int>();
+                int CurrentIndex = 0;
+                //string MutatableMolecule = Molecule.Replace(s[0], "_");
+                for (int i = 0; i <= Molecule.Length - s[1].Length; i++)
+                    if (Molecule.Substring(i, s[1].Length) == s[1])
+                    {
+                        NumberOfReplacments.Add(CurrentIndex, i);
+                        CurrentIndex++;
+                    }
+                for (int i = 0; i < CurrentIndex; i++)
+                {
+                    StringBuilder LetsTryThisOne = new StringBuilder();
+                    {
+                        if (NumberOfReplacments[i] > 0)
+                            LetsTryThisOne.Append(Molecule.Substring(0, NumberOfReplacments[i]));
+                        LetsTryThisOne.Append(s[0]);
+                        if (NumberOfReplacments[i] < Molecule.Length)
+                            LetsTryThisOne.Append(Molecule.Substring(NumberOfReplacments[i] + s[1].Length));
                     }
                     if (!DistinctMolecules.Contains(LetsTryThisOne.ToString()))
                         DistinctMolecules.Add(LetsTryThisOne.ToString());
@@ -60,10 +111,7 @@ namespace Advent2015
                         JustForcuriosity++;
                 }
             }
-            Sum = DistinctMolecules.Count;
-            stopWatch.Stop();
-            TimeSpan ts = stopWatch.Elapsed;
-            return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
+            return DistinctMolecules;
         }
     }
 }
