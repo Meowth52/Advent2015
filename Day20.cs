@@ -35,13 +35,18 @@ namespace Advent2015
                 mainView.OutText = CurrentHouse.ToString();
             }
             Sum = CurrentHouse;
-            HouseSum = 0;
-            CurrentHouse = 51;
             InputNumber *= 10;
             while (HouseSum < InputNumber)
             {
                 CurrentHouse++;
-                HouseSum = getHouseSum(CurrentHouse);
+                IEnumerable<int> Factors = GetFactors1(CurrentHouse);
+                HouseSum = 0;
+                foreach(int i in Factors)
+                {
+                    if (CurrentHouse / i <= 50)
+                        HouseSum += i;
+                }
+                HouseSum *= 11;
                 mainView.OutText = CurrentHouse.ToString();
             }
             Sum2 = CurrentHouse;
