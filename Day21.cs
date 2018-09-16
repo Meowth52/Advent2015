@@ -142,11 +142,14 @@ namespace Advent2015
         }
         public void takeHit(int Damage)
         {
-            int DamageTaken = Damage - HeroArmour;
-            if (DamageTaken > 0)
-                HeroHitpoints -= DamageTaken;
-            else
-                HeroHitpoints--;
+            if (Damage > 0)
+            {
+                int DamageTaken = Damage - HeroArmour;
+                if (DamageTaken > 0)
+                    HeroHitpoints -= DamageTaken;
+                else
+                    HeroHitpoints--;
+            }
         }
         public bool isDead()
         {
