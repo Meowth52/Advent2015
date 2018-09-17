@@ -80,9 +80,9 @@ namespace Advent2015
                 {
                     Wizard TestWizard = new Wizard(w);
                     if (TestWizard.trolla())
-                        if (TestWizard.ManaSpent < Sum)
+                        if (TestWizard.ManaSpent < Sum2)
                         {
-                            Sum = TestWizard.ManaSpent;
+                            Sum2 = TestWizard.ManaSpent;
                         }
                         else;
                     else
@@ -124,6 +124,8 @@ namespace Advent2015
             ManaSpent = newSpell.Cost;
             Spells.Add(new Spell(newSpell));
             IsPart2 = isPart2;
+            if (IsPart2)
+                Hitpoints--;
         }
         public Wizard(Wizard lastIteration)
         {
@@ -159,8 +161,6 @@ namespace Advent2015
             foreach (Spell s in Spells)
             {
                 Hitpoints += s.Hp;
-                if (IsPart2)
-                    Hitpoints--;
                 Damage += s.Damage;
                 Armour += s.Armour;
                 Mana += s.Mana;
@@ -187,6 +187,8 @@ namespace Advent2015
             this.takeHit();
             Spells = new List<Spell>(NextSpells);
             NextSpells.Clear();
+            if (IsPart2)
+                Hitpoints--;
             return Opponent.isDead();
         }
         public void takeHit()
