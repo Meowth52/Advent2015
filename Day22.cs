@@ -21,7 +21,7 @@ namespace Advent2015
         public string Result()
         {
             int Sum = 1000000;
-            int Sum2 = 0;
+            int Sum2 = 1000000;
             int IterationX = 0;
             Hero Boss = new Hero(Instructions);
             // initiate spells
@@ -37,7 +37,7 @@ namespace Advent2015
             List<Wizard> Wizards = new List<Wizard>();
             foreach (Spell s in Spells)
             {
-                Wizards.Add(new Wizard(Boss, s));
+                Wizards.Add(new Wizard(Boss, s, false));
             }            
             while (Wizards.Count > 0)
             {
@@ -66,6 +66,38 @@ namespace Advent2015
                     }
                 }
             }
+            Wizards.Clear();
+            foreach (Spell s in Spells)
+            {
+                Wizards.Add(new Wizard(Boss, s, true));
+            }
+            while (Wizards.Count > 0)
+            {
+                IterationX++;
+                Wizard w = new Wizard(Wizards.Last());
+                Wizards.RemoveAt(Wizards.Count - 1);
+                foreach (Spell s in Spells)
+                {
+                    Wizard TestWizard = new Wizard(w);
+                    if (TestWizard.trolla())
+                        if (TestWizard.ManaSpent < Sum)
+                        {
+                            Sum = TestWizard.ManaSpent;
+                        }
+                        else;
+                    else
+                    {
+                        if (!TestWizard.isDead() && TestWizard.ManaSpent < Sum2)
+                        {
+                            if (TestWizard.Mana >= s.Cost & !TestWizard.hasSpell(s))
+                                Wizards.Add(new Wizard(TestWizard, s));
+                            else
+                                //Wizards.Add(new Wizard(TestWizard));
+                                ;
+                        }
+                    }
+                }
+            }
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
@@ -81,15 +113,17 @@ namespace Advent2015
         int Armour;
         public int Mana { get; set; }
         public int ManaSpent { get; }
-        public Wizard(Hero opponent, Spell newSpell)
+        bool IsPart2 = false;
+        public Wizard(Hero opponent, Spell newSpell, bool isPart2)
         {
             Opponent = new Hero(opponent);
             Hitpoints = 50;
             Damage = 0;
             Armour = 0;
-            Mana = 500;
-            ManaSpent = 0;
+            Mana = 500-newSpell.Cost;
+            ManaSpent = newSpell.Cost;
             Spells.Add(new Spell(newSpell));
+            IsPart2 = isPart2;
         }
         public Wizard(Wizard lastIteration)
         {
@@ -102,6 +136,7 @@ namespace Advent2015
             Spells = new List<Spell>();
             foreach (Spell s in lastIteration.Spells)
                 Spells.Add(new Spell(s));
+            IsPart2 = lastIteration.IsPart2;
         }
         public Wizard(Wizard lastIteration, Spell newSpell)
         {
@@ -115,14 +150,17 @@ namespace Advent2015
             foreach (Spell s in lastIteration.Spells)
                 Spells.Add(new Spell(s));
             Spells.Add(new Spell(newSpell));
+            IsPart2 = lastIteration.IsPart2;
         }
         public bool trolla()
         {
-            if (Spells.Count == 0 && Mana < 53)
+            if (Mana < 53)
                 Hitpoints = 0;
             foreach (Spell s in Spells)
             {
                 Hitpoints += s.Hp;
+                if (IsPart2)
+                    Hitpoints--;
                 Damage += s.Damage;
                 Armour += s.Armour;
                 Mana += s.Mana;
