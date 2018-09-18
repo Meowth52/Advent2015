@@ -35,10 +35,19 @@ namespace Advent2015
                     AssembleCounter++;
                 }
             }
-            while (Index >= 0 && Index <= AssembleCounter)
+            while (Index >= 0 && Index <= AssembleCounter-1)
             {
-
+                Index += Assembelbunnys[Index].AssembelBunnysAssemble(ref a, ref b);
             }
+            Sum = b;
+            a = 1;
+            b = 0;
+            Index = 0;
+            while (Index >= 0 && Index <= AssembleCounter - 1)
+            {
+                Index += Assembelbunnys[Index].AssembelBunnysAssemble(ref a, ref b);
+            }
+            Sum2 = b;
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
@@ -54,52 +63,62 @@ namespace Advent2015
             string[] Splitstring = s.Split(' ');
             Type = Splitstring[0][2];
             Register = Splitstring[1][0];
-            Int32.TryParse(Splitstring[2], out Offset);
+            Int32.TryParse(Splitstring.Last(), out Offset);
         }
-        public int AssembelBunnysAssemble(int i, ref int a, ref int b)
+        public int AssembelBunnysAssemble(ref int a, ref int b)
         {
-            
+            int ReturnValue = 1;
+            int ActiveRegister = 0;
+            switch (Register)
+            {
+                case 'a':
+                    ActiveRegister = a;
+                    break;
+                case 'b':
+                    ActiveRegister = b;
+                    break;
+            }
             char caseSwitch = Type;
 
             switch (caseSwitch)
             {
                 case 'f':
-                    a=a/2;
+                    ActiveRegister=ActiveRegister/2;
                     break;
                 case 'l':
-                    Console.WriteLine("Case 2");
+                    ActiveRegister = ActiveRegister * 3;
                     break;
                 case 'c':
-                    Console.WriteLine("Case 2");
+                    ActiveRegister++;
                     break;
                 case 'p':
-                    Console.WriteLine("Case 2");
+                    ReturnValue = Offset;
                     break;
                 case 'e':
-                    Console.WriteLine("Case 2");
+                    if (ActiveRegister%2 == 0)
+                        ReturnValue = Offset;
                     break;
                 case 'o':
-                    Console.WriteLine("Case 2");
+                    if (ActiveRegister == 1)
+                        ReturnValue = Offset;
                     break;
                 default:
                     ;
                     break;
             }
-            return 1;
-      int caseSwitch = 1;
-      
-      switch (caseSwitch)
-      {
-          case 1:
-              Console.WriteLine("Case 1");
-              break;
-          case 2:
-              Console.WriteLine("Case 2");
-              break;
-          default:
-              Console.WriteLine("Default case");
-              break;
-      }
+            switch (Register)
+            {
+                case 'a':
+                    a = ActiveRegister;
+                    break;
+                case 'b':
+                    b = ActiveRegister;
+                    break;
+                default:
+                    ;
+                    break;
+            }
+            return ReturnValue;
         }
     }
 }
