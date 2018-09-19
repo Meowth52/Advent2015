@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows;
 
 namespace Advent2015
 {
@@ -20,7 +21,16 @@ namespace Advent2015
         }
         public string Result()
         {
-            int Sum = 0;
+            int NumberOfCompartments;
+            if (MessageBox.Show("Is it time for part 2?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            {
+                NumberOfCompartments = 4;
+            }
+            else
+            {
+                NumberOfCompartments = 3;
+            }
+            long Sum = 0;
             int Sum2 = 0;
             List<int> Packages = new List<int>();
             int NextPackage;
@@ -31,52 +41,76 @@ namespace Advent2015
                 if (NextPackage!=0)
                     Packages.Add(NextPackage);
             }
-            int TargetWeight = Packages.Sum()/3;
-            Dictionary<int, List<int>> PossibleCominations = new Dictionary<int, List<int>> { { Packages[0], new List<int> { Packages[0] } } }; 
+             // for part one
+            int TargetWeight = Packages.Sum()/NumberOfCompartments;
+            
             int IterationX = 0;
-            Dictionary<int, List<int>> BestCandidates = new Dictionary<int, List<int>>();
-            while (PossibleCominations.Count > 0)
+            int LowestCount = 100;
+            long LowestQE = 100000000000;
+            Dictionary<long, List<int>> BestCandidates = new Dictionary<long, List<int>>();
+            foreach (int StartInt in Packages)
             {
-                IterationX++;
-                int RemoveIndex = PossibleCominations.Last().Key;
-                List<int> CopyCurrentElement = copyList(PossibleCominations.Last().Value);
-                PossibleCominations.Remove(RemoveIndex);
-                foreach (int i in Packages)
+                Dictionary<long, List<int>> PossibleCominations = new Dictionary<long, List<int>> { { StartInt, new List<int> { StartInt } } };
+                while (PossibleCominations.Count > 0)
                 {
-                    List<int> ItMightBeThisCombination = copyList(CopyCurrentElement);
-                    if (!ItMightBeThisCombination.Contains(i))
+                    IterationX++;
+                    long RemoveIndex = PossibleCominations.Last().Key;
+                    List<int> CopyCurrentElement = copyList(PossibleCominations.Last().Value);
+                    PossibleCominations.Remove(RemoveIndex);
+                    foreach (int i in Packages)
                     {
-                        ItMightBeThisCombination.Sort();
-                        if (i > ItMightBeThisCombination.Last())
+                        List<int> ItMightBeThisCombination = copyList(CopyCurrentElement);
+                        if (!ItMightBeThisCombination.Contains(i))
                         {
-                            ItMightBeThisCombination.Add(i);
-                            if (ItMightBeThisCombination.Sum() == TargetWeight)
+                            ItMightBeThisCombination.Sort();
+                            if (true)
                             {
-                                int QE = 1;
-                                foreach (int w in ItMightBeThisCombination)
+                                ItMightBeThisCombination.Add(i);
+                                if (ItMightBeThisCombination.Sum() == TargetWeight)
                                 {
-                                    QE *= w;
+                                    if (ItMightBeThisCombination.Count <= LowestCount)
+                                    {
+                                        LowestCount = ItMightBeThisCombination.Count;
+                                        long QE = 1;
+                                        foreach (int w in ItMightBeThisCombination)
+                                        {
+                                            QE *= w;
+                                        }
+                                        if (QE <= LowestQE)
+                                        {
+                                            LowestQE = QE;
+                                            if (!BestCandidates.ContainsKey(QE))
+                                                BestCandidates.Add(QE, ItMightBeThisCombination);
+                                        }
+                                    }
                                 }
-                                if (!BestCandidates.ContainsKey(QE))
-                                    BestCandidates.Add(QE, ItMightBeThisCombination);
-                            }
-                            else if (ItMightBeThisCombination.Sum() < TargetWeight)
-                            {
-                                int QE = 1;
-                                foreach (int w in ItMightBeThisCombination)
+                                else if (ItMightBeThisCombination.Sum() < TargetWeight && ItMightBeThisCombination.Count < LowestCount)
                                 {
-                                    QE *= w;
+                                    long QE = 1;
+                                    foreach (int w in ItMightBeThisCombination)
+                                    {
+                                        QE *= w;
+                                    }
+                                    if (QE <= LowestQE)
+                                    {
+                                        if (!PossibleCominations.ContainsKey(QE))
+                                            PossibleCominations.Add(QE, ItMightBeThisCombination);
+                                    }
                                 }
-                                if (!PossibleCominations.ContainsKey(QE))
-                                    PossibleCominations.Add(QE, ItMightBeThisCombination);
                             }
                         }
                     }
                 }
             }
+            foreach(KeyValuePair<long, List<int>> k in BestCandidates)
+            {
+                if (k.Key < LowestQE)
+                    LowestQE = k.Key;
+            }
+            Sum = LowestQE;
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
-            return "Del 1: " + Sum.ToString() + " och del 2: " + Sum2.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
+            return "Svaret är: " + Sum.ToString() + " Executed in " + ts.TotalMilliseconds.ToString() + " ms";
         }
         public List<int> copyList(List<int> l)
         {
